@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>funnet!!</title>
+  <link rel="icon" type="image/png" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { background: #fff; color: #222; font-family: "MS PGothic", "Osaka", "Arial", sans-serif; }
+    .bbs-container { max-width: 700px; margin: 40px auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 0 10px #0f0, 0 0 0 3px #0f0 inset; }
+    textarea { width: 100%; height: 90px; font-size: 1.1em; margin-bottom: 12px; border: 2px solid #0f0; border-radius: 6px; background: #fff; color: #222; }
+    input[type="text"] { width: 100%; font-size: 1.05em; margin-bottom: 12px; border: 2px solid #0f0; border-radius: 6px; background: #fff; color: #222; padding: 6px; }
+    .btn { background: #0f0; color: #222; font-size: 1.1em; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+    .btn:hover { background: #bfffbf; }
+    .bbs-list-title { font-weight: bold; margin: 28px 0 10px 0; color: #0f0; text-shadow: 0 0 3px #0f0; }
+    .post-item { background: #f9fff9; border: 2px solid #0f0; margin: 8px 0; padding: 7px 14px; border-radius: 7px; color: #222; }
+    .post-id { color: #0f0; font-size: 0.9em; }
+    .post-type { color: #080; font-size: 0.95em; font-weight: bold; }
+    .reply-btn { background: #0f0; color: #222; font-size: 0.95em; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; margin-left: 10px; font-weight: bold; }
+    .reply-btn:hover { background: #bfffbf; }
+    .like-btn {
+      background: #fff;
+      color: #d00;
+      border: 1px solid #d00;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1.3em;
+      text-align: center;
+      line-height: 32px;
+      cursor: pointer;
+      margin-left: 8px;
+      vertical-align: middle;
+      transition: background 0.13s, color 0.13s;
+      position: relative;
+      top: 3px;
+      box-shadow: 0 0 3px #fbb;
+    }
+    .like-btn.liked,
+    .like-btn:hover {
+      background: #ffeaea;
+      color: #fff;
+      border-color: #d00;
+      box-shadow: 0 0 8px #f88;
+    }
+    .like-count {
+      font-size: 1em;
+      color: #d00;
+      margin-left: 4px;
+      vertical-align: middle;
+      font-weight: bold;
+    }
+    .reply-box { background: #eaffea; border-left: 4px solid #0f0; margin: 6px 0 6px 24px; padding: 5px 10px; border-radius: 6px; }
+    #replyingTo { color: #080; font-size: 0.95em; margin-bottom: 8px; }
+    .logo { width: 64px; height: 64px; object-fit: cover; vertical-align: middle; border-radius: 12px; margin-right: 10px; border: 2px solid #0f0; background: #fff; }
+    .header-flex { display: flex; align-items: center; margin-bottom: 20px; }
+    select { border: 2px solid #0f0; border-radius: 4px; background: #fff; color: #222; font-size: 1.05em; }
+    @media (max-width: 800px) { .bbs-container { max-width: 98vw; } textarea { height: 60px; } }
+    .badge-dev { background:#080;color:#fff;font-size:80%;padding:2px 7px;border-radius:7px;margin-right:5px; }
+    .badge-vip { background:#f1c40f;color:#222;font-size:80%;padding:2px 7px;border-radius:7px;margin-right:5px; }
+    .agreement-warning {
+      background: #ffe3e3;
+      color: #c00;
+      border: 2px solid #c00;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 1.04em;
+      display: none;
+    }
+    .deleted-post {
+      opacity: 0.6;
+      color: #aaa;
+    }
+    .deleted-label {
+      color: #c00;
+      font-weight: bold;
+    }
+    .deleted-reason {
+      color: #a00;
+      font-size: 90%;
+      margin-left: 1em;
+    }
+    .more-btn {
+      display: block;
+      margin: 10px auto 0 auto;
+      background: #e0ffe0;
+      color: #222;
+      border: 1px solid #0f0;
+      border-radius: 7px;
+      padding: 7px 30px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .more-btn:hover { background: #c7ffc7; }
+    .more-reply-btn {
+      display: inline-block;
+      margin: 6px 0 0 24px;
+      background: #e0ffe0;
+      color: #222;
+      border: 1px solid #0f0;
+      border-radius: 6px;
+      padding: 3px 19px;
+      font-size: 0.98em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.13s;
+    }
+    .more-reply-btn:hover { background: #c7ffc7; }
+    .less-reply-btn {
+      display: inline-block;
+      margin: 6px 0 0 10px;
+      background: #ffe0e0;
+      color: #222;
+      border: 1px solid #f00;
+      border-radius: 6px;
+      padding: 3px 19px;
+      font-size: 0.98em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.13s;
+    }
+    .less-reply-btn:hover { background: #ffc7c7; }
+    .notify-btn {
+      background: #0f0;
+      color: #222;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      padding: 5px 18px;
+      font-size: 1.01em;
+      margin-bottom: 8px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: background 0.14s;
+      box-shadow: 0 0 4px #0f0;
+    }
+    .notify-btn:hover { background: #bfffbf; }
+    .notify-status {
+      display: inline-block;
+      font-size: 0.98em;
+      margin-left: 5px;
+      color: #080;
+    }
+    #installCount {
+      margin-top: 4px;
+      margin-bottom: 10px;
+      color: #080;
+      font-weight: bold;
+      font-size: 1.05em;
+    }
+    #accessCount {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #080;
+      font-size: 1.05em;
+    }
+    #installBtn {
+      margin-left: auto;
+    }
+  </style>
+  <script>
+  if (!localStorage.getItem('agreedToTerms')) {
+    window.location.href = "利用規約.html";
+  }
+  </script>
+</head>
+<body>
+  <div class="bbs-container">
+    <div class="header-flex">
+      <img src="image.png" alt="funnet!! ロゴ" class="logo">
+      <h1 style="margin:0;">funnet!!</h1>
+      <button id="installBtn" style="display:none;">funnet!!をインストール</button>
+    </div>
+    <div id="installCount">インストール数: ...</div>
+    <div id="accessCount">アクセス数: ...</div>
+    <div>
+      <button class="notify-btn" id="notifyBtn">通知を有効化</button>
+      <span class="notify-status" id="notifyStatus"></span>
+    </div>
+    <div id="agreement-warning" class="agreement-warning"></div>
+    <div id="replyingTo" style="display:none;"></div>
+    <textarea id="message" placeholder="本文を入力"></textarea><br>
+    <input type="text" id="searchBox" placeholder="IDや本文でスレ検索" style="width:98%;margin-bottom:10px;">
+    <button class="btn" id="sendBtn">新規スレッド投稿</button>
+    <span id="resultMsg"></span>
+    <div style="margin:14px 0 6px 0;">
+      並び順：
+      <select id="sortSelect">
+        <option value="new">新しい順</option>
+        <option value="old">古い順</option>
+        <option value="reply">返信が多い順</option>
+        <option value="like">いいね順</option>
+      </select>
+    </div>
+    <div class="bbs-list-title">投稿一覧</div>
+    <div id="bbs-list">読み込み中...</div>
+  </div>
+<script>
+const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSc__F8U-nILVYE9QuoDGZ5Vht-eSbjWmzZ3yYW2uyP5tcRoTA/formResponse";
+const ENTRY_ALL = "entry.1697175125";
+const API_URL = "https://script.google.com/macros/s/AKfycbzYyu1gltGOl-CFM0KspVkhzWBDCmvutiEIunkQ4i6JWBIBxxX4xhqatCkOcv_5x3SE/exec";
+
+let replyTo = null;
+let replyToText = "";
+let postData = [];
+let searchQuery = "";
+let showThreadCount = 100000;
+const THREAD_STEP = 10;
+let showRepliesMap = {};
+let latestThreadId = null;
+let latestReplyId = null;
+let notificationEnabled = false;
+let likeCounts = {};
+let accessCount = 0;
+let installCount = 0;
+
+// BBSデータ取得
+async function fetchSheetData() {
+  const res = await fetch(API_URL);
+  return await res.json();
+}
+
+async function loadBBS() {
+  try {
+    postData = await fetchSheetData();
+    console.log("取得したpostData", postData); // デバッグ用：取得データ表示
+    checkNotification(postData);
+    loadLikesAndRender();
+  } catch(e) {
+    document.getElementById('bbs-list').innerText = "データ取得中...";
+  }
+}
+
+// アクセス数
+async function loadAccessCount() {
+  try {
+    const arr = await fetchSheetData();
+    accessCount = arr.filter(row => row.type === "アクセス").length;
+    renderAccessCount();
+  } catch(e) {}
+}
+function renderAccessCount() {
+  const el = document.getElementById('accessCount');
+  if (el) el.innerText = `アクセス数: ${accessCount}`;
+}
+
+// インストール数
+async function loadInstallCount() {
+  try {
+    const arr = await fetchSheetData();
+    installCount = arr.filter(row => row.type === "インストール").length;
+    renderInstallCount();
+  } catch(e) {}
+}
+function renderInstallCount() {
+  const el = document.getElementById('installCount');
+  if (el) el.innerText = `インストール数: ${installCount}`;
+}
+
+// いいね集計
+async function loadLikesAndRender() {
+  try {
+    const arr = await fetchSheetData();
+    const map = {};
+    arr.forEach(row => {
+      if(row.type === "いいね" && row.parent){
+        const [postId, userId] = row.parent.split(":");
+        if(!postId || !userId) return;
+        if(!map[postId]) map[postId] = new Set();
+        map[postId].add(userId);
+      }
+    });
+    likeCounts = {};
+    Object.keys(map).forEach(pid => {
+      likeCounts[pid] = map[pid].size;
+    });
+    renderBBS();
+  } catch(e) {}
+}
+
+// 送信部分は従来通り（GoogleフォームにPOST）
+function base64EncodeUnicode(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+      return String.fromCharCode('0x' + p1);
+  }));
+}
+function base64DecodeUnicode(str) {
+  try {
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+  } catch(e) {
+    return str;
+  }
+}
+function generateId() {
+  return Date.now().toString();
+}
+function getDeleteReason(targetId) {
+  const delReply = postData.find(r =>
+    r.type === "返信" &&
+    r.parent === targetId &&
+    base64DecodeUnicode(r.body||"").startsWith("&&DEL&&")
+  );
+  if (delReply) {
+    const reason = base64DecodeUnicode(delReply.body||"").replace(/^&&DEL&&/, "");
+    if (reason.trim() === "") {
+      return null;
+    }
+    return reason;
+  }
+  return undefined;
+}
+function isDeleteReply(row) {
+  return row.type === "返信" && base64DecodeUnicode(row.body||"").startsWith("&&DEL&&");
+}
+async function submitPost() {
+  const bodyRaw = document.getElementById("message").value.trim();
+  if(!bodyRaw) { alert("本文を入力してください"); return; }
+  const body = base64EncodeUnicode(bodyRaw);
+  const id = generateId();
+  const type = replyTo ? "返信" : "スレッド";
+  const parentId = replyTo ? replyTo : "";
+  const all = [id, type, body.replace(/,/g,"，"), parentId].join(",");
+  const formData = new FormData();
+  formData.append(ENTRY_ALL, all);
+  document.getElementById("sendBtn").disabled = true;
+  document.getElementById("resultMsg").innerText = "送信中…";
+  try {
+    await fetch(FORM_ACTION, { method: "POST", mode: "no-cors", body: formData });
+    document.getElementById("resultMsg").innerText = "送信しました！";
+    document.getElementById("message").value = "";
+    replyTo = null;
+    replyToText = "";
+    document.getElementById("replyingTo").style.display = "none";
+    document.getElementById("sendBtn").innerText = "新規スレッド投稿";
+    loadBBS();
+  } catch(e) {
+    document.getElementById("resultMsg").innerText = "送信に失敗しました";
+  }
+  document.getElementById("sendBtn").disabled = false;
+}
+// アクセス数送信
+function sendAccessLog() {
+  const id = Date.now().toString();
+  const type = "アクセス";
+  const body = "";
+  const parentId = "";
+  const all = [id, type, body, parentId].join(",");
+  const formData = new FormData();
+  formData.append(ENTRY_ALL, all);
+  fetch(FORM_ACTION, { method: "POST", mode: "no-cors", body: formData });
+}
+// インストール数送信（appinstalledイベントで呼ばれる）
+window.addEventListener('appinstalled', function() {
+  const id = Date.now().toString();
+  const type = "インストール";
+  const body = "";
+  const parentId = "";
+  const all = [id, type, body, parentId].join(",");
+  const formData = new FormData();
+  formData.append(ENTRY_ALL, all);
+  fetch(FORM_ACTION, { method: "POST", mode: "no-cors", body: formData });
+  setTimeout(loadInstallCount, 1500);
+});
+// いいね送信
+function sendLike(postId) {
+  let userId = localStorage.getItem("funnet_like_uid");
+  if(!userId){
+    userId = "u" + Math.random().toString(36).substring(2) + Date.now();
+    localStorage.setItem("funnet_like_uid", userId);
+  }
+  let likedKey = "liked_"+postId;
+  if(localStorage.getItem(likedKey)) return;
+  localStorage.setItem(likedKey, "1");
+  const id = Date.now().toString();
+  const type = "いいね";
+  const body = "";
+  const parentId = postId + ":" + userId;
+  const all = [id, type, body.replace(/,/g,"，"), parentId].join(",");
+  const formData = new FormData();
+  formData.append(ENTRY_ALL, all);
+  fetch(FORM_ACTION, { method: "POST", mode: "no-cors", body: formData });
+  setTimeout(loadLikesAndRender, 2000);
+}
+// 全階層返信数
+function countAllReplies(parentId) {
+  let count = 0;
+  const directReplies = postData.filter(r => r.type === "返信" && r.parent === parentId && !isDeleteReply(r));
+  count += directReplies.length;
+  for (const reply of directReplies) {
+    count += countAllReplies(reply.id);
+  }
+  return count;
+}
+function checkNotification(data) {
+  let threads = data.filter(r => r.type === "スレッド");
+  let replies = data.filter(r => r.type === "返信" && !isDeleteReply(r));
+  if (!threads.length && !replies.length) return;
+  let maxThreadId = threads.length ? Math.max(...threads.map(t => parseInt(t.id,10))) : null;
+  let maxReplyId = replies.length ? Math.max(...replies.map(r => parseInt(r.id,10))) : null;
+  if (latestThreadId === null) latestThreadId = maxThreadId;
+  if (latestReplyId === null) latestReplyId = maxReplyId;
+  if (notificationEnabled && Notification.permission === "granted") {
+    if (maxThreadId && maxThreadId > latestThreadId) {
+      const newThreads = threads.filter(t => parseInt(t.id,10) > latestThreadId);
+      newThreads.forEach(t => {
+        let body = base64DecodeUnicode(t.body||"");
+        let title = "新しいスレッドが投稿されました";
+        if(body.length>32) body = body.substring(0,32) + "...";
+        new Notification(title, { body, icon: "image.png" });
+      });
+      latestThreadId = maxThreadId;
+    }
+    if (maxReplyId && maxReplyId > latestReplyId) {
+      const newReplies = replies.filter(r => parseInt(r.id,10) > latestReplyId);
+      newReplies.forEach(r => {
+        let body = base64DecodeUnicode(r.body||"");
+        let title = "新しい返信が投稿されました";
+        if(body.length>32) body = body.substring(0,32) + "...";
+        new Notification(title, { body, icon: "image.png" });
+      });
+      latestReplyId = maxReplyId;
+    }
+  } else {
+    latestThreadId = maxThreadId;
+    latestReplyId = maxReplyId;
+  }
+}
+function renderReplies(parentId, depth=1, showCount=5, parentKey=null) {
+  if (depth > 10) return "";
+  const replies = postData.filter(r => r.type === "返信" && r.parent === parentId && !isDeleteReply(r));
+  const total = replies.length;
+  let currentShow = showCount;
+  const key = parentKey || parentId;
+  if (showRepliesMap[key] !== undefined) currentShow = showRepliesMap[key];
+  showRepliesMap[key] = currentShow;
+  let html = "";
+  for(let idx = 0; idx < Math.min(currentShow, total); idx++) {
+    const rep = replies[idx];
+    const delReason = getDeleteReason(rep.id);
+    if (delReason !== undefined) {
+      html += `<div class="reply-box deleted-post" style="margin-left:${depth*24}px;">
+        <span style="color:#888;font-size:90%;">>>${rep.id}</span>
+        <span class="deleted-label">この投稿は削除されました</span>
+        ${delReason !== null ? `<span class="deleted-reason">理由：${delReason}</span>` : ""}
+      </div>`;
+      continue;
+    }
+    let repBadge = "";
+    let repBody = base64DecodeUnicode(rep.body || "");
+    if(repBody.startsWith("&&DEV&&")) {
+      repBadge = `<span class="badge-dev">開発者</span>`;
+      repBody = repBody.replace(/^&&DEV&&/, "");
+    } else if(repBody.startsWith("&&VIP&&")) {
+      repBadge = `<span class="badge-vip">VIP</span>`;
+      repBody = repBody.replace(/^&&VIP&&/, "");
+    }
+    let likeCount = likeCounts[rep.id] || 0;
+    let liked = !!localStorage.getItem("liked_"+rep.id);
+    html += `<div class="reply-box" style="margin-left:${depth*24}px;">
+      <span style="color:#888;font-size:90%;">>>${rep.id}</span> ${repBadge}${repBody}
+      <button class="reply-btn" onclick="setReply('${rep.id}','${rep.body.replace(/'/g,"&#39;")}')">返信</button>
+      <button class="like-btn${liked ? ' liked' : ''}" title="いいね！" onclick="sendLike('${rep.id}')">♥</button>
+      <span class="like-count">${likeCount}</span>
+      ${renderReplies(rep.id, depth+1, 5, rep.id)}
+    </div>`;
+  }
+  if(currentShow < total) {
+    html += `<button class="more-reply-btn" onclick="showAllReplies('${key}')">すべて見る（${total-currentShow}件）</button>`;
+  } else if(total > 5 && currentShow >= total) {
+    html += `<button class="less-reply-btn" onclick="showLessReplies('${key}')">表示数を減らす</button>`;
+  }
+  return html;
+}
+function showAllReplies(parentId) {
+  const replies = postData.filter(r => r.type === "返信" && r.parent === parentId && !isDeleteReply(r));
+  showRepliesMap[parentId] = replies.length;
+  renderBBS();
+}
+window.showAllReplies = showAllReplies;
+function showLessReplies(parentId) {
+  showRepliesMap[parentId] = 5;
+  renderBBS();
+}
+window.showLessReplies = showLessReplies;
+function renderBBS() {
+  const bbsList = document.getElementById('bbs-list');
+  const sort = document.getElementById("sortSelect").value;
+  let threads = postData.filter(r => r.type === "スレッド");
+  if (searchQuery) {
+    const kw = searchQuery.toLowerCase();
+    threads = threads.filter(th => {
+      const bodyDecoded = base64DecodeUnicode(th.body||"");
+      return (th.id && th.id.toLowerCase().includes(kw)) ||
+             (bodyDecoded && bodyDecoded.toLowerCase().includes(kw));
+    });
+  }
+  threads.forEach(th => {
+    th.replyCount = countAllReplies(th.id);
+    th.likeCount = likeCounts[th.id] || 0;
+    th.timestamp = parseInt(th.id, 10) || 0;
+  });
+  if(sort === "new") {
+    threads.sort((a,b) => b.timestamp - a.timestamp);
+  } else if(sort === "old") {
+    threads.sort((a,b) => a.timestamp - b.timestamp);
+  } else if(sort === "reply") {
+    threads.sort((a,b) => b.replyCount - a.replyCount || b.timestamp - a.timestamp);
+  } else if(sort === "like") {
+    threads.sort((a,b) => b.likeCount - a.likeCount || b.timestamp - a.timestamp);
+  }
+  let displayThreads = threads.slice(0, showThreadCount);
+  let html = "";
+  for(const th of displayThreads) {
+    const delReason = getDeleteReason(th.id);
+    if (delReason !== undefined) {
+      html += `<div class="post-item deleted-post">
+        <span class="post-id">ID:${th.id}</span>　
+        <span class="post-type">${th.type}</span><br>
+        <span class="deleted-label">この投稿は削除されました</span>
+        ${delReason !== null ? `<span class="deleted-reason">理由：${delReason}</span>` : ""}
+      </div>`;
+      continue;
+    }
+    let badge = "";
+    let body = base64DecodeUnicode(th.body || "");
+    if(body.startsWith("&&DEV&&")) {
+      badge = `<span class="badge-dev">開発者</span>`;
+      body = body.replace(/^&&DEV&&/, "");
+    } else if(body.startsWith("&&VIP&&")) {
+      badge = `<span class="badge-vip">VIP</span>`;
+      body = body.replace(/^&&VIP&&/, "");
+    }
+    let likeCount = likeCounts[th.id] || 0;
+    let liked = !!localStorage.getItem("liked_"+th.id);
+    showRepliesMap[th.id] = showRepliesMap[th.id] || 5;
+    html += `<div class="post-item">
+      <span class="post-id">ID:${th.id}</span>　
+      <span class="post-type">${th.type}</span><br>
+      ${badge}${body}<br>
+      <button class="reply-btn" onclick="setReply('${th.id}','${th.body.replace(/'/g,"&#39;")}')">返信</button>
+      <button class="like-btn${liked ? ' liked' : ''}" title="いいね！" onclick="sendLike('${th.id}')">♥</button>
+      <span class="like-count">${likeCount}</span>
+      <span style="font-size:90%;color:#666;"> 返信:${th.replyCount}</span>
+      <div>
+        ${renderReplies(th.id, 1, showRepliesMap[th.id], th.id)}
+      </div>
+    </div>`;
+  }
+  if(showThreadCount < threads.length) {
+    html += `<button class="more-btn" onclick="showMoreThreads()">もっと見るスレッド（${threads.length-showThreadCount}件）</button>`;
+  }
+  bbsList.innerHTML = html || "投稿がありません";
+}
+function showMoreThreads() {
+  showThreadCount += THREAD_STEP;
+  renderBBS();
+}
+document.getElementById("sortSelect").onchange = function() {
+  showThreadCount = THREAD_STEP;
+  renderBBS();
+};
+document.getElementById("searchBox").oninput = function() {
+  searchQuery = this.value.trim();
+  showThreadCount = THREAD_STEP;
+  renderBBS();
+};
+window.setReply = function(id,body) {
+  replyTo = id;
+  replyToText = base64DecodeUnicode(body ? body : "");
+  document.getElementById("replyingTo").innerHTML = `【返信先ID: ${id}】<br>「${replyToText}」`;
+  document.getElementById("replyingTo").style.display = "block";
+  document.getElementById("sendBtn").innerText = "返信を投稿";
+  document.getElementById("message").focus();
+};
+document.getElementById("sendBtn").onclick = submitPost;
+const notifyBtn = document.getElementById("notifyBtn");
+const notifyStatus = document.getElementById("notifyStatus");
+function updateNotifyStatus() {
+  if (Notification.permission === "granted") {
+    notifyStatus.textContent = "通知ON";
+    notificationEnabled = true;
+    notifyBtn.style.display = "none";
+  } else if(Notification.permission === "denied") {
+    notifyStatus.textContent = "通知拒否";
+    notificationEnabled = false;
+    notifyBtn.style.display = "none";
+  } else {
+    notifyStatus.textContent = "通知OFF";
+    notificationEnabled = false;
+    notifyBtn.style.display = "";
+  }
+}
+notifyBtn.onclick = function() {
+  if (!("Notification" in window)) {
+    alert("このブラウザは通知に対応していません。");
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    updateNotifyStatus();
+    if (permission === "granted") {
+      notificationEnabled = true;
+      new Notification("通知が有効になりました", { body: "新しいスレッドや返信を通知します", icon: "image.png" });
+    }
+  });
+};
+updateNotifyStatus();
+document.addEventListener("visibilitychange", updateNotifyStatus);
+
+/* --- PWAインストール/ブラウザで開く切替 --- */
+let deferredPrompt;
+function isStandalone() {
+  return (window.matchMedia('(display-mode: standalone)').matches)
+    || (window.navigator.standalone === true)
+    || (document.referrer && document.referrer.startsWith('android-app://'));
+}
+window.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById("installBtn");
+  if (isStandalone()) {
+    btn.style.display = "";
+    btn.textContent = "ブラウザで開く";
+    btn.onclick = function() {
+      window.open(window.location.href, "_blank", "noopener");
+    };
+  } else {
+    btn.style.display = "none";
+  }
+});
+window.addEventListener('beforeinstallprompt', (e)=>{
+  if (isStandalone()) return;
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installBtn").style.display = "";
+  document.getElementById("installBtn").textContent = "funnet!!をインストール";
+  document.getElementById("installBtn").onclick = function() {
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(()=>{
+        document.getElementById("installBtn").style.display = "none";
+      });
+    }
+  };
+});
+
+/* ----------- 起動時 ----------- */
+sendAccessLog();
+loadAccessCount();
+setInterval(loadAccessCount, 10000);
+loadInstallCount();
+setInterval(loadInstallCount, 15000);
+loadBBS();
+setInterval(loadBBS, 5000);
+setInterval(loadLikesAndRender, 8000);
+</script>
+</body>
+</html>

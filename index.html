@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="funnet!!''ファンネット''はアカウント登録不要、匿名で安全な掲示板サイトです。">
+  <title>FUNNET!!</title>
+  <script>
+    window.onload = function () {
+      // JSTはUTC+9なので、JSTの2025年6月1日12:00をUTCに変換
+      const deadline = new Date('2025-06-01T03:00:00Z'); // JST 12:00 → UTC 03:00
+
+      const now = new Date();
+
+      if (now < deadline) {
+        // 期限前ならCDT.puter.siteにリダイレクト
+        window.location.href = "https://CDT.puter.site";
+      } else {
+        // 期限後ならfunnet.htmlを表示
+        window.location.href = "funnet.html";
+      }
+    };
+  </script>
+</head>
+<body>
+    <p style="color: #ff0000; font-size: 1.5em; text-align: center; margin-top: 20vh;">
+        You are not supposed to be here yet.
+      </p>      
+</body>
+</html>

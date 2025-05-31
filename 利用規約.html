@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>利用規約 - funnet!!</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #333;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 1em;
+    }
+    h2 {
+      font-size: 22px;
+      margin-top: 2em;
+    }
+    ul {
+      padding-left: 1.5em;
+    }
+    li {
+      margin-bottom: 0.5em;
+    }
+    .agree-btn {
+      display: block;
+      margin: 2em auto 0 auto;
+      padding: 12px 32px;
+      background: #0f0;
+      color: #222;
+      font-size: 1.1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 6px #0f0;
+      transition: background 0.2s;
+    }
+    .agree-btn:hover {
+      background: #bfffbf;
+    }
+    .agree-note {
+      color: #666;
+      font-size: 0.95em;
+      text-align: center;
+      margin-top: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>利用規約</h1>
+
+  <p>この利用規約（以下「本規約」といいます。）は、funnet!!（以下「本サービス」といいます。）の利用条件を定めるものです。本サービスを利用された方（以下「ユーザー」といいます。）は、本規約に同意したものとみなされます。</p>
+
+  <h2>第1条（適用）</h2>
+  <p>本規約は、ユーザーと運営者（以下「当運営」といいます。）との間における、本サービスの利用に関する一切の行為に適用されます。</p>
+
+  <h2>第2条（匿名利用と責任）</h2>
+  <ul>
+    <li>本サービスはアカウント登録不要で利用できます。ユーザーの個人情報は取得しておらず、特定も行いません。</li>
+    <li>匿名利用であっても、投稿や行動については各自が責任を負うものとします。</li>
+    <li>法令違反や第三者への権利侵害があった場合、必要に応じて投稿記録やIPアドレス等の情報を法的機関へ開示することがあります。</li>
+  </ul>
+
+  <h2>第3条（禁止事項）</h2>
+  <p>ユーザーは、以下の行為を行ってはなりません。</p>
+  <ul>
+    <li>法令または公序良俗に反する行為</li>
+    <li>他者を誹謗中傷、差別、脅迫する行為</li>
+    <li>著作権や商標権等、第三者の知的財産権を侵害する行為</li>
+    <li>他人のプライバシーを侵害する行為（実名、住所、電話番号の投稿など）</li>
+    <li>同一内容の繰り返し投稿、荒らし、スパム的行為</li>
+    <li>広告、宣伝、営業目的の投稿（当運営の許可を得た場合を除く）</li>
+    <li>その他、当運営が不適切と判断する行為</li>
+  </ul>
+
+  <h2>第4条（投稿の管理）</h2>
+  <ul>
+    <li>ユーザーの投稿内容は原則として即時に公開されます。</li>
+    <li>当運営は、禁止事項に該当する内容や、社会通念上不適切と判断した投稿を、事前の通知なく削除・非表示にすることができます。</li>
+    <li>投稿内容の削除に関する問い合わせには原則応じません。</li>
+  </ul>
+
+  <h2>第5条（著作権）</h2>
+  <ul>
+    <li>ユーザーが投稿した内容の著作権は、投稿者に帰属します。</li>
+    <li>ただし、ユーザーは当運営に対して、投稿内容を本サービス上または外部媒体において無償で利用・転載・編集できる非独占的な権利を許諾するものとします。</li>
+  </ul>
+
+  <h2>第6条（免責事項）</h2>
+  <ul>
+    <li>当運営は、ユーザーによる投稿内容について一切の責任を負いません。</li>
+    <li>ユーザー間またはユーザーと第三者との間に生じたトラブルについて、当運営は一切関与いたしません。</li>
+    <li>本サービスの提供中断・終了によって生じた損害についても、当運営は一切の責任を負いません。</li>
+  </ul>
+
+  <h2>第7条（サービス内容の変更等）</h2>
+  <p>当運営は、ユーザーへの事前通知なく、本サービスの内容を変更、停止または終了することができます。</p>
+
+  <h2>第8条（規約の変更）</h2>
+  <p>当運営は、必要と判断した場合には、本規約を予告なく変更することがあります。変更後の規約は本サイト上に掲示した時点で効力を生じます。</p>
+
+  <h2>第9条（準拠法・裁判管轄）</h2>
+  <p>本規約は日本法を準拠法とし、本サービスに関するすべての紛争については、当運営の所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とします。</p>
+  
+  <button class="agree-btn" onclick="agreeTerms()">同意する</button>
+  <div class="agree-note">
+    ※「同意する」ボタンを押すと掲示板の利用が可能になります。
+  </div>
+  <script>
+    function agreeTerms() {
+      localStorage.setItem('agreedToTerms', '1');
+      location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
